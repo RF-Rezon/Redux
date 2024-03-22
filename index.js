@@ -8,12 +8,12 @@ const ADD_USER = "ADD_USER";
 
 // State (যা নিয়ে কাজ করতে চাই)
 const initCounterState = {
+    name: "Rafiq",
+    age: 0,
+    height: 0,
     count: 0
 }
 
-const initUserState = {
-    users: [{ name: "anisul islam" }]
-}
 
 // Action
 const increamCounter = () => {
@@ -26,6 +26,12 @@ const decreamCounter = () => {
         type: DECREMENT,
     }
 }
+
+export const PayloadCounter = (payload) => ({
+  type: ADD_USER ,
+  payload
+})
+
 
 // const addUser = ()=>{
 //     return {
@@ -49,6 +55,12 @@ const counterReducer = (state = initCounterState, action) => {
                 count: state.count - 1
 
             }
+
+        case ADD_USER:
+            return {
+                ...state,
+                height: state.height + action.payload
+            }
         default: state;
 
     }
@@ -62,6 +74,7 @@ store.subscribe(()=>{
 })
 
 // dispatch action
-store.dispatch(increamCounter())
+store.dispatch(PayloadCounter(10));
+
 
  
