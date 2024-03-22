@@ -8,7 +8,7 @@ const ADD_USER = "ADD_USER";
 
 // State (যা নিয়ে কাজ করতে চাই)
 const initCounterState = {
-    name: "Rafiq",
+    name: ["Rafiq"],
     age: 0,
     height: 0,
     count: 0
@@ -33,14 +33,6 @@ export const PayloadCounter = (payload) => ({
 })
 
 
-// const addUser = ()=>{
-//     return {
-//         type: ADD_USER,
-//         payload: {name: "shakil"}
-//     }
-// }
-
-
 // Reducer 
 const counterReducer = (state = initCounterState, action) => {
     switch (action.type) {
@@ -59,7 +51,8 @@ const counterReducer = (state = initCounterState, action) => {
         case ADD_USER:
             return {
                 ...state,
-                height: state.height + action.payload
+                name: [...state.name , action.payload], 
+                height: state.height + action.payload.length
             }
         default: state;
 
@@ -74,7 +67,10 @@ store.subscribe(()=>{
 })
 
 // dispatch action
-store.dispatch(PayloadCounter(10));
+store.dispatch(PayloadCounter('Minhaz'));
+store.dispatch(PayloadCounter('Priya'));
+store.dispatch(PayloadCounter('Ashkara'));
+store.dispatch(PayloadCounter('Mashkara'));
 
 
  
