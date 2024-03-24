@@ -1,5 +1,4 @@
-import { createStore } from 'redux';
-
+import { createStore, applyMiddleware } from 'redux';
 
 const INCREMENT = "INCREMENT";
 const DECREMENT = "DECREMENT";
@@ -60,7 +59,7 @@ const counterReducer = (state = initCounterState, action) => {
 }
 
 // Create store
-const store = createStore(counterReducer);
+const store = createStore(counterReducer, applyMiddleware());
 
 store.subscribe(()=>{
     console.log(store.getState())
