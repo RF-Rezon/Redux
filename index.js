@@ -1,75 +1,85 @@
-import { createStore, applyMiddleware } from 'redux';
+// middleware - redux thunk
+import axios from 'axios';
+import { applyMiddleware, createStore } from 'redux';
+import { thunk } from "redux-thunk"; // Import directly without require
 
-const INCREMENT = "INCREMENT";
-const DECREMENT = "DECREMENT";
-const ADD_USER = "ADD_USER";
+const GET_TODOES_REQ = "GET_TODOES_REQ";
+const GET_TODOES_SUC = "GET_TODOES_SUC";
+const GET_TODOES_ERR = "GET_TODOES_ERR";
+const API_URL = "https://jsonplaceholder.typicode.com/todkkos";
 
+// states
+const initialState = {
+    todos: [],
+    isLoading: false,
+    error: null
+}
 
-// State (যা নিয়ে কাজ করতে চাই)
-const initCounterState = {
-    name: ["Rafiq"],
-    age: 0,
-    height: 0,
-    count: 0
+// actions
+
+const getTodoesRequest = () => {
+    return { type: GET_TODOES_REQ }
+}
+const getTodoesSuccess = (payload) => {
+    return { type: GET_TODOES_SUC , payload }
+}
+const getTodoesErr = (payload) => {
+    return { type: GET_TODOES_ERR, payload }
 }
 
 
-// Action
-const increamCounter = () => {
-    return {
-        type: INCREMENT,
+// reducers
+
+ const todoesReducer = (state = initialState, {type, payload }) => {
+  switch (type) {
+
+  case GET_TODOES_REQ:
+    return { 
+        ...state,
+        isLoading: true,
+    };
+  case GET_TODOES_SUC:
+    return { 
+        ...state,
+        isLoading: false,
+        todos: payload,
+    };
+  case GET_TODOES_ERR:
+    return { 
+        ...state,
+        isLoading: false,
+        error: payload
+    };
+
+  default:
+    return state
+  }
+}
+
+const fatchData = ()=>{
+    return (dispatch)=>{
+        dispatch(getTodoesRequest());
+        axios.get(API_URL)
+        .then(res => {
+            const response = res.data;
+            response.slice(0, 10).map(x => {
+                const titles = x.title;
+                 dispatch(getTodoesSuccess(titles))
+            })
+        })
+        .catch(err => {
+            const errorMessage = err.message;
+            dispatch(getTodoesErr(errorMessage))
+        })
     }
 }
-const decreamCounter = () => {
-    return {
-        type: DECREMENT,
-    }
-}
 
-export const PayloadCounter = (payload) => ({
-  type: ADD_USER ,
-  payload
-})
+// store
 
-
-// Reducer 
-const counterReducer = (state = initCounterState, action) => {
-    switch (action.type) {
-        case INCREMENT:
-            return {
-                ...state,
-                count: state.count + 1
-            }
-        case DECREMENT:
-            return {
-                ...state,
-                count: state.count - 1
-
-            }
-
-        case ADD_USER:
-            return {
-                ...state,
-                name: [...state.name , action.payload], 
-                height: state.height + action.payload.length
-            }
-        default: state;
-
-    }
-}
-
-// Create store
-const store = createStore(counterReducer, applyMiddleware());
+const store = createStore(todoesReducer , applyMiddleware(thunk));
 
 store.subscribe(()=>{
     console.log(store.getState())
 })
 
-// dispatch action
-store.dispatch(PayloadCounter('Minhaz'));
-store.dispatch(PayloadCounter('Priya'));
-store.dispatch(PayloadCounter('Ashkara'));
-store.dispatch(PayloadCounter('Mashkara'));
-
-
- 
+store.dispatch(fatchData())
