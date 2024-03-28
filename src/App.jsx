@@ -1,11 +1,15 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useDispatch, useSelector } from 'react-redux';
+import { increaseCount } from '../Actions/Actions';
+import './App.css';
+import reactLogo from './assets/react.svg';
+import viteLogo from '/vite.svg';
 
-function App() {
-  const [count, setCount] = useState(0)
-
+export default function App() {
+  const count = useSelector(state => state.count);
+  const dispatch = useDispatch();
+  const handleIncreament = ()=>{
+    dispatch(increaseCount()) // Always call actions into the dispatch
+  }
   return (
     <>
       <div>
@@ -18,7 +22,7 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
+        <button onClick={handleIncreament}>
           count is {count}
         </button>
         <p>
@@ -32,4 +36,3 @@ function App() {
   )
 }
 
-export default App
